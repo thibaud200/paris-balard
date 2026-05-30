@@ -811,11 +811,12 @@
   <script>
     // ── Chargement données CMS ──
     async function loadData() {
-      const base = 'https://cdn.jsdelivr.net/gh/thibaud200/paris-balard@main/';
+      const base = 'https://raw.githubusercontent.com/thibaud200/paris-balard/main/';
+      const bust = '?t=' + Math.floor(Date.now() / 300000);
 
       // Stats
       try {
-        const r = await fetch(base + '_data/stats.json');
+        const r = await fetch(base + '_data/stats.json' + bust);
         if (r.ok) {
           const d = await r.json();
           if (d.stat1_num) document.getElementById('stat1-num').textContent = d.stat1_num;
@@ -831,7 +832,7 @@
 
       // Réunion
       try {
-        const r = await fetch(base + '_data/reunion.json');
+        const r = await fetch(base + '_data/reunion.json' + bust);
         if (r.ok) {
           const d = await r.json();
           const jour = d.jour || 'Chaque mercredi';
@@ -887,7 +888,7 @@
 
       // Contact
       try {
-        const r = await fetch(base + '_data/contact.json');
+        const r = await fetch(base + '_data/contact.json' + bust);
         if (r.ok) {
           const d = await r.json();
           if (d.email) {
