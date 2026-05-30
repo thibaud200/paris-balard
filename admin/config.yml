@@ -31,7 +31,9 @@ collections:
     label_singular: Action
     folder: _data/actions
     create: true
-    slug: "{{slug}}"
+    slug: "{{year}}-{{month}}-{{day}}-{{titre}}"
+    summary: "{{titre}} — {{date}}"
+    identifier_field: titre
     fields:
       - { label: Titre, name: titre, widget: string }
       - { label: Date, name: date, widget: string, hint: "Ex: Juin 2026" }
@@ -51,14 +53,13 @@ collections:
 
   - name: stats
     label: Chiffres clés
-    label_singular: Chiffre
     files:
       - name: chiffres
         label: Chiffres d'impact
         file: _data/stats.json
         fields:
-          - { label: Chiffre 1 — Nombre, name: stat1_num, widget: string, hint: "Ex: 3 000" }
-          - { label: Chiffre 1 — Description, name: stat1_desc, widget: string, hint: "Ex: jouets collectés pour Noël 2025" }
+          - { label: Chiffre 1 — Nombre, name: stat1_num, widget: string }
+          - { label: Chiffre 1 — Description, name: stat1_desc, widget: string }
           - { label: Chiffre 2 — Nombre, name: stat2_num, widget: string }
           - { label: Chiffre 2 — Description, name: stat2_desc, widget: string }
           - { label: Chiffre 3 — Nombre, name: stat3_num, widget: string }
