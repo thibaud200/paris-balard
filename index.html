@@ -850,10 +850,30 @@
           const files = await res.json();
           if (Array.isArray(files) && files.length > 0) {
             const actions = await Promise.all(
-              files.filter(f => f.name.endsWith('.json'))
-                .map(f => fetch(f.download_url).then(r => r.json()))
+              files.filter(f => f.name.endsWith('.json') || f.name.endsWith('.md'))
+                .map(async f => {
+                  const r = await fetch(f.download_url);
+                  const text = await r.text();
+                  // Parse markdown frontmatter
+                  if (f.name.endsWith('.md')) {
+                    const match = text.match(/^---\n([\s\S]*?)\n---/);
+                    if (match) {
+                      const obj = {};
+                      match[1].split('\n').forEach(line => {
+                        const i = line.indexOf(':');
+                        if (i > 0) {
+                          const key = line.slice(0, i).trim();
+                          const val = line.slice(i + 1).trim().replace(/^['"]|['"]$/g, '');
+                          obj[key] = val;
+                        }
+                      });
+                      return obj;
+                    }
+                  }
+                  return JSON.parse(text);
+                })
             );
-            const actives = actions.filter(a => a.actif !== false);
+            const actives = actions.filter(a => a && a.actif !== false && a.actif !== 'false');
             if (actives.length > 0) {
               document.getElementById('actions-grid').innerHTML = actives.map(a => `
                 <div class="action-card">
