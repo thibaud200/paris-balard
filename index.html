@@ -809,16 +809,23 @@
   </footer>
 
   <script>
-    // ── Chargement données CMS ──
+    // ── Chargement données CMS via API GitHub ──
+    async function fetchJSON(path) {
+      try {
+        const r = await fetch(`https://api.github.com/repos/thibaud200/paris-balard/contents/${path}`, {
+          headers: { 'Accept': 'application/vnd.github.v3.raw' }
+        });
+        if (r.ok) return await r.json();
+      } catch(e) {}
+      return null;
+    }
+
     async function loadData() {
-      const base = 'https://raw.githubusercontent.com/thibaud200/paris-balard/main/';
-      const bust = '?t=' + Math.floor(Date.now() / 300000);
 
       // Stats
       try {
-        const r = await fetch(base + '_data/stats.json' + bust);
-        if (r.ok) {
-          const d = await r.json();
+        const d = await fetchJSON('_data/stats.json');
+        if (d) {
           if (d.stat1_num) document.getElementById('stat1-num').textContent = d.stat1_num;
           if (d.stat1_desc) document.getElementById('stat1-desc').textContent = d.stat1_desc;
           if (d.stat2_num) document.getElementById('stat2-num').textContent = d.stat2_num;
@@ -832,65 +839,57 @@
 
       // Réunion
       try {
-        const r = await fetch(base + '_data/reunion.json' + bust);
-        if (r.ok) {
-          const d = await r.json();
+        const d = await fetchJSON('_data/reunion.json');
+        if (d) {
           const jour = d.jour || 'Chaque mercredi';
           const horaire = d.horaire || '19h00';
           const lieu = d.lieu || 'Hôtel Bedford';
           const adresse = d.adresse || "17 rue de l'Arcade";
           const ville = d.ville || '75008 Paris';
-
-          // Section réunions
           document.getElementById('reunion-horaire').textContent = horaire;
           document.getElementById('reunion-jour').textContent = jour;
           document.getElementById('reunion-lieu').textContent = lieu;
           document.getElementById('reunion-adresse').innerHTML = adresse + '<br>' + ville;
-
-          // Hero meta
           document.getElementById('hero-lieu').textContent = lieu;
           document.getElementById('hero-jour').textContent = jour;
           document.getElementById('hero-horaire').textContent = horaire;
-
-          // Hero next-meeting card
           document.getElementById('next-horaire').textContent = horaire;
           document.getElementById('next-lieu').textContent = lieu;
           document.getElementById('next-adresse').textContent = adresse;
           document.getElementById('next-ville').textContent = ville;
-
-          // Footer
           document.getElementById('footer-reunion').textContent = lieu + ' · ' + adresse + ' · ' + ville + ' · ' + jour + ' ' + horaire;
         }
       } catch(e) {}
 
-      // Actions via API GitHub
+      // Actions
       try {
         const res = await fetch('https://api.github.com/repos/thibaud200/paris-balard/contents/_data/actions');
         if (res.ok) {
           const files = await res.json();
-          const actions = await Promise.all(
-            files.filter(f => f.name.endsWith('.json'))
-              .map(f => fetch(f.download_url).then(r => r.json()))
-          );
-          const actives = actions.filter(a => a.actif !== false);
-          if (actives.length > 0) {
-            document.getElementById('actions-grid').innerHTML = actives.map(a => `
-              <div class="action-card">
-                <div class="action-date">${a.date || ''}</div>
-                <h3>${a.titre || ''}</h3>
-                <p>${a.description || ''}</p>
-                <span class="action-tag">${a.categorie || ''}</span>
-              </div>
-            `).join('');
+          if (Array.isArray(files) && files.length > 0) {
+            const actions = await Promise.all(
+              files.filter(f => f.name.endsWith('.json'))
+                .map(f => fetch(f.download_url).then(r => r.json()))
+            );
+            const actives = actions.filter(a => a.actif !== false);
+            if (actives.length > 0) {
+              document.getElementById('actions-grid').innerHTML = actives.map(a => `
+                <div class="action-card">
+                  <div class="action-date">${a.date || ''}</div>
+                  <h3>${a.titre || ''}</h3>
+                  <p>${a.description || ''}</p>
+                  <span class="action-tag">${a.categorie || ''}</span>
+                </div>
+              `).join('');
+            }
           }
         }
       } catch(e) {}
 
       // Contact
       try {
-        const r = await fetch(base + '_data/contact.json' + bust);
-        if (r.ok) {
-          const d = await r.json();
+        const d = await fetchJSON('_data/contact.json');
+        if (d) {
           if (d.email) {
             document.querySelectorAll('a[href^="mailto:"]').forEach(el => {
               el.href = 'mailto:' + d.email;
