@@ -542,22 +542,22 @@
 
   <!-- IMPACT -->
   <section id="impact" class="reveal">
-    <div class="stats-grid">
+    <div class="stats-grid" id="stats-grid">
       <div class="stat-card">
-        <div><span class="num">3 000</span></div>
-        <div class="desc">jouets collectés pour Noël 2025</div>
+        <div><span class="num" id="stat1-num">3 000</span></div>
+        <div class="desc" id="stat1-desc">jouets collectés pour Noël 2025</div>
       </div>
       <div class="stat-card">
-        <div><span class="num">850</span></div>
-        <div class="desc">produits d'hygiène distribués en 2026</div>
+        <div><span class="num" id="stat2-num">850</span></div>
+        <div class="desc" id="stat2-desc">produits d'hygiène distribués en 2026</div>
       </div>
       <div class="stat-card">
-        <div><span class="num">180<span class="unit">+</span></span></div>
-        <div class="desc">abonnés LinkedIn · communauté active</div>
+        <div><span class="num" id="stat3-num">180<span class="unit">+</span></span></div>
+        <div class="desc" id="stat3-desc">abonnés LinkedIn · communauté active</div>
       </div>
       <div class="stat-card">
-        <div><span class="num">52</span></div>
-        <div class="desc">réunions par an · chaque mercredi</div>
+        <div><span class="num" id="stat4-num">52</span></div>
+        <div class="desc" id="stat4-desc">réunions par an · chaque mercredi</div>
       </div>
     </div>
   </section>
@@ -649,7 +649,7 @@
   <section id="actions" style="background:var(--navy-mid);">
     <div class="section-header reveal"><span class="section-tag">Nos engagements</span></div>
     <h2 class="section-title reveal" style="margin-bottom:2.5rem;">Actions <em>récentes</em></h2>
-    <div class="actions-grid reveal">
+    <div class="actions-grid reveal" id="actions-grid">
       <div class="action-card">
         <div class="action-date">Juin 2026</div>
         <h3>Récital caritatif France-Brésil</h3>
@@ -737,16 +737,16 @@
         <div class="reunion-visual-bg"></div>
         <div class="reunion-visual-grid"></div>
         <div class="reunion-visual-content">
-          <span class="time">19h00</span>
+          <span class="time" id="reunion-horaire">19h00</span>
           <span class="time-sub">Dîner</span>
           <div class="divider"></div>
-          <span class="day">Chaque mercredi</span>
+          <span class="day" id="reunion-jour">Chaque mercredi</span>
         </div>
       </div>
       <div class="reunion-info">
         <p class="location-label">Lieu de réunion</p>
-        <h3>Hôtel Bedford</h3>
-        <p class="address">17 rue de l'Arcade<br>75008 Paris</p>
+        <h3 id="reunion-lieu">Hôtel Bedford</h3>
+        <p class="address" id="reunion-adresse">17 rue de l'Arcade<br>75008 Paris</p>
         <p class="note">
           Nos réunions hebdomadaires du mercredi soir sont l'occasion d'échanger, 
           d'accueillir des intervenants et de préparer nos actions. Ouvertes aux membres 
@@ -809,6 +809,81 @@
   </footer>
 
   <script>
+    // ── Chargement données CMS ──
+    async function loadData() {
+      const base = 'https://raw.githubusercontent.com/thibaud200/paris-balard/main/';
+
+      // Stats
+      try {
+        const r = await fetch(base + '_data/stats.json');
+        if (r.ok) {
+          const d = await r.json();
+          if (d.stat1_num) document.getElementById('stat1-num').textContent = d.stat1_num;
+          if (d.stat1_desc) document.getElementById('stat1-desc').textContent = d.stat1_desc;
+          if (d.stat2_num) document.getElementById('stat2-num').textContent = d.stat2_num;
+          if (d.stat2_desc) document.getElementById('stat2-desc').textContent = d.stat2_desc;
+          if (d.stat3_num) document.getElementById('stat3-num').innerHTML = d.stat3_num;
+          if (d.stat3_desc) document.getElementById('stat3-desc').textContent = d.stat3_desc;
+          if (d.stat4_num) document.getElementById('stat4-num').textContent = d.stat4_num;
+          if (d.stat4_desc) document.getElementById('stat4-desc').textContent = d.stat4_desc;
+        }
+      } catch(e) {}
+
+      // Réunion
+      try {
+        const r = await fetch(base + '_data/reunion.json');
+        if (r.ok) {
+          const d = await r.json();
+          if (d.horaire) document.getElementById('reunion-horaire').textContent = d.horaire;
+          if (d.jour) document.getElementById('reunion-jour').textContent = d.jour;
+          if (d.lieu) document.getElementById('reunion-lieu').textContent = d.lieu;
+          if (d.adresse && d.ville) document.getElementById('reunion-adresse').innerHTML = d.adresse + '<br>' + d.ville;
+        }
+      } catch(e) {}
+
+      // Actions via API GitHub
+      try {
+        const res = await fetch('https://api.github.com/repos/thibaud200/paris-balard/contents/_data/actions');
+        if (res.ok) {
+          const files = await res.json();
+          const actions = await Promise.all(
+            files.filter(f => f.name.endsWith('.json'))
+              .map(f => fetch(f.download_url).then(r => r.json()))
+          );
+          const actives = actions.filter(a => a.actif !== false);
+          if (actives.length > 0) {
+            document.getElementById('actions-grid').innerHTML = actives.map(a => `
+              <div class="action-card">
+                <div class="action-date">${a.date || ''}</div>
+                <h3>${a.titre || ''}</h3>
+                <p>${a.description || ''}</p>
+                <span class="action-tag">${a.categorie || ''}</span>
+              </div>
+            `).join('');
+          }
+        }
+      } catch(e) {}
+
+      // Contact
+      try {
+        const r = await fetch(base + '_data/contact.json');
+        if (r.ok) {
+          const d = await r.json();
+          if (d.email) {
+            document.querySelectorAll('a[href^="mailto:"]').forEach(el => {
+              el.href = 'mailto:' + d.email;
+              if (el.textContent.includes('@')) el.textContent = d.email;
+            });
+          }
+          if (d.linkedin) document.querySelectorAll('a[href*="linkedin.com"]').forEach(el => el.href = d.linkedin);
+          if (d.instagram) document.querySelectorAll('a[href*="instagram.com"]').forEach(el => el.href = d.instagram);
+        }
+      } catch(e) {}
+    }
+
+    loadData();
+
+    // ── Scroll reveal ──
     const reveals = document.querySelectorAll('.reveal');
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry, i) => {
@@ -820,14 +895,13 @@
     }, { threshold: 0.06 });
     reveals.forEach(el => observer.observe(el));
 
-    // Hamburger menu
+    // ── Hamburger menu ──
     const hamburger = document.getElementById('hamburger');
     const navMobile = document.getElementById('nav-mobile');
     hamburger.addEventListener('click', () => {
       hamburger.classList.toggle('open');
       navMobile.classList.toggle('open');
     });
-    // Close menu on link click
     document.querySelectorAll('.nav-mobile-link').forEach(link => {
       link.addEventListener('click', () => {
         hamburger.classList.remove('open');
