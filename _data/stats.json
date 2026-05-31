@@ -1,1 +1,10 @@
-{"stat1_num":"3 000","stat1_desc":"jouets collectés pour Noël 2025","stat2_num":"850","stat2_desc":"produits d'hygiène distribués en 2026","stat3_num":"180+","stat3_desc":"abonnés LinkedIn · communauté active","stat4_num":"52","stat4_desc":"réunions par an · chaque mercredi"}
+{
+  "stat1_num": "3 000",
+  "stat1_desc": "jouets collectés pour Noël 2025",
+  "stat2_num": "850",
+  "stat2_desc": "produits d'hygiène distribués en 2026",
+  "stat3_num": "180+",
+  "stat3_desc": "abonnés LinkedIn · communauté active",
+  "stat4_num": "20",
+  "stat4_desc": "réunions/diners par an · 2 mercredi par mois"
+}
