@@ -97,6 +97,34 @@ jobs:
           except Exception as e:
               print(f'Contact error: {e}')
 
+
+          # --- Contenus sections ---
+          import markdown as md_lib
+          def md_to_html(text):
+              try:
+                  import subprocess
+                  result = subprocess.run(['python3', '-c', f'import markdown; print(markdown.markdown("""{text}"""))'], capture_output=True, text=True)
+                  return result.stdout.strip()
+              except:
+                  return text.replace('\n', '<br>')
+
+          for slug, id_titre, id_desc in [
+              ('devenir-membre', 'membre-titre', 'membre-description'),
+              ('mission', 'mission-titre', 'mission-description'),
+              ('vie-du-club', 'vie-titre', 'vie-description'),
+          ]:
+              try:
+                  with open(f'_data/contenu/{slug}.json', 'r', encoding='utf-8') as f:
+                      c = json.load(f)
+                  if c.get('titre'):
+                      html = re.sub(f'id="{id_titre}">[^<]*', f'id="{id_titre}">{c["titre"]}', html)
+                  if c.get('description'):
+                      desc_html = c['description'].replace('\n\n', '</p><p>').replace('\n', '<br>')
+                      desc_html = f'<p>{desc_html}</p>'
+                      html = re.sub(f'id="{id_desc}">.*?</div>', f'id="{id_desc}">{desc_html}</div>', html, flags=re.DOTALL)
+              except Exception as e:
+                  print(f'Contenu {slug} error: {e}')
+
           with open('index.html', 'w', encoding='utf-8') as f:
               f.write(html)
 

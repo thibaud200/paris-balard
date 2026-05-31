@@ -80,3 +80,27 @@ collections:
           - { label: Email, name: email, widget: string }
           - { label: LinkedIn URL, name: linkedin, widget: string }
           - { label: Instagram URL, name: instagram, widget: string }
+
+  - name: contenus
+    label: Contenus des sections
+    files:
+      - name: devenir-membre
+        label: Section "Devenir membre"
+        file: _data/contenu/devenir-membre.json
+        fields:
+          - { label: Citation / Accroche, name: titre, widget: string }
+          - { label: Description, name: description, widget: markdown }
+
+      - name: mission
+        label: Section "Qui sommes-nous"
+        file: _data/contenu/mission.json
+        fields:
+          - { label: Titre, name: titre, widget: string }
+          - { label: Description, name: description, widget: markdown }
+
+      - name: vie-du-club
+        label: Section "Vie du club"
+        file: _data/contenu/vie-du-club.json
+        fields:
+          - { label: Titre, name: titre, widget: string }
+          - { label: Description, name: description, widget: markdown }
