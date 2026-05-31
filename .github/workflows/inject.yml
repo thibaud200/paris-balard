@@ -99,14 +99,20 @@ jobs:
 
 
           # --- Contenus sections ---
-          import markdown as md_lib
           def md_to_html(text):
-              try:
-                  import subprocess
-                  result = subprocess.run(['python3', '-c', f'import markdown; print(markdown.markdown("""{text}"""))'], capture_output=True, text=True)
-                  return result.stdout.strip()
-              except:
-                  return text.replace('\n', '<br>')
+              # Conversion markdown basique sans module externe
+              lines = text.split('\n')
+              result = []
+              for line in lines:
+                  line = re.sub(r'\*\*(.+?)\*\*', r'<strong>\1</strong>', line)
+                  line = re.sub(r'\*(.+?)\*', r'<em>\1</em>', line)
+                  line = re.sub(r'^### (.+)', r'<h3>\1</h3>', line)
+                  line = re.sub(r'^## (.+)', r'<h2>\1</h2>', line)
+                  line = re.sub(r'^# (.+)', r'<h1>\1</h1>', line)
+                  result.append(line)
+              html_text = '\n'.join(result)
+              paragraphs = [p.strip() for p in html_text.split('\n\n') if p.strip()]
+              return ''.join(f'<p>{p.replace(chr(10), "<br>")}</p>' if not p.startswith('<h') else p for p in paragraphs)
 
           for slug, id_titre, id_desc in [
               ('devenir-membre', 'membre-titre', 'membre-description'),
