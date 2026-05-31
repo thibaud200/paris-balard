@@ -21,7 +21,7 @@
       localStorage.removeItem('sveltia-cms.user');
       localStorage.removeItem('sveltia-cms.prefs');
       sessionStorage.clear();
-      window.location.reload();
+      window.location.href = '/admin/index.html?logout=' + Date.now();
     }
 
     const interval = setInterval(() => {
