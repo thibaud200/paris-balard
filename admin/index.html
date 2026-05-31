@@ -5,6 +5,30 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin — Rotary Paris Balard</title>
   <script src="https://unpkg.com/@sveltia/cms/dist/sveltia-cms.js"></script>
+  <style>
+    #logout-btn {
+      position: fixed; bottom: 1rem; right: 1rem; z-index: 99999;
+      background: #c00; color: white; border: none;
+      padding: 0.5rem 1rem; cursor: pointer; font-size: 0.8rem;
+      border-radius: 4px; display: none;
+    }
+  </style>
 </head>
-<body></body>
+<body>
+  <button id="logout-btn" onclick="logout()">Se déconnecter</button>
+  <script>
+    function logout() {
+      localStorage.clear();
+      sessionStorage.clear();
+      window.location.href = '/admin';
+    }
+    // Afficher le bouton si connecté
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        const hasToken = Object.keys(localStorage).some(k => k.includes('token') || k.includes('sveltia') || k.includes('netlify'));
+        if (hasToken) document.getElementById('logout-btn').style.display = 'block';
+      }, 2000);
+    });
+  </script>
+</body>
 </html>
