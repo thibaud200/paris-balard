@@ -33,7 +33,7 @@ jobs:
                 'id="reunion-horaire">[^<]*': f'id="reunion-horaire">{horaire}',
                 'id="reunion-jour">[^<]*':    f'id="reunion-jour">{jour}',
                 'id="reunion-lieu">[^<]*':    f'id="reunion-lieu">{lieu}',
-                'id="reunion-adresse">[^<]*': f'id="reunion-adresse">{adresse}<br>{ville}',
+                'id="reunion-adresse">.*?(?=</p>)': f'id="reunion-adresse">{adresse}<br>{ville}',
                 'id="hero-lieu">[^<]*':       f'id="hero-lieu">{lieu}',
                 'id="hero-jour">[^<]*':       f'id="hero-jour">{jour}',
                 'id="hero-horaire">[^<]*':    f'id="hero-horaire">{horaire}',
