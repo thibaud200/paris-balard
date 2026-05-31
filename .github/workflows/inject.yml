@@ -41,6 +41,8 @@ jobs:
                 'id="next-lieu">[^<]*':       f'id="next-lieu">{lieu}',
                 'id="next-adresse">[^<]*':    f'id="next-adresse">{adresse}',
                 'id="next-ville">[^<]*':      f'id="next-ville">{ville}',
+                'id="next-day">[^<]*':        f'id="next-day">{jour}',
+                'id="next-month">[^<]*':      f'id="next-month">{jour}',
               }
               for pattern, replacement in replacements.items():
                   html = re.sub(pattern, replacement, html)
