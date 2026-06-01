@@ -145,19 +145,16 @@ jobs:
                               photo_html = f'<div style="width:100%;height:180px;overflow:hidden;"><img src="{m["photo"]}" style="width:100%;height:100%;object-fit:cover;object-position:center;" /></div>' if m.get('photo') else '<div style="width:100%;height:160px;background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.1);display:flex;align-items:center;justify-content:center;"><span style="font-size:2rem;opacity:0.3;">📷</span></div>'
                               desc = m.get('description', '').replace('\n\n', '</p><p>').replace('\n', '<br>')
                               moment_cards.append(f'''
-                <div style="background:var(--navy-mid);padding:0 0 1.5rem;position:relative;overflow:hidden;">
-                  <div style="position:absolute;top:0;left:0;width:3px;height:100%;background:var(--gold);opacity:0.4;"></div>
+                <div class="action-card">
                   {photo_html}
-                  <div style="padding:1rem 1.5rem 0;">
-                    <div style="font-size:0.68rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin-bottom:0.5rem;">{m.get("date","")}</div>
-                    <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:400;color:var(--white);margin-bottom:0.5rem;">{m.get("titre","")}</h3>
-                    <p style="font-size:0.82rem;font-weight:300;color:rgba(253,250,244,0.58);line-height:1.7;">{desc}</p>
-                    <span style="display:inline-block;margin-top:0.8rem;font-size:0.65rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(201,168,76,0.18);padding:0.25rem 0.7rem;">{m.get("categorie","")}</span>
-                  </div>
+                  <div class="action-date">{m.get("date","")}</div>
+                  <h3>{m.get("titre","")}</h3>
+                  <p>{desc}</p>
+                  <span class="action-tag">{m.get("categorie","")}</span>
                 </div>''')
               if moment_cards:
-                  new_moments = '<div id="moments-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:2px;background:rgba(201,168,76,0.08);">' + ''.join(moment_cards) + '</div>'
-                  html = re.sub('<div id="moments-grid">.*?<div class="vie-grid">', new_moments + '\n      <div class="vie-grid">', html, flags=re.DOTALL)
+                  new_moments = '<div class="actions-grid reveal" id="moments-grid">' + ''.join(moment_cards) + '</div>'
+                  html = re.sub('<div class="actions-grid reveal" id="moments-grid">.*?</div>\n    </div>\n  \n    <div class="vie-grid">', new_moments + '\n    </div>\n  \n    <div class="vie-grid">', html, flags=re.DOTALL)
           except Exception as e:
               print(f'Moments error: {e}')
 
