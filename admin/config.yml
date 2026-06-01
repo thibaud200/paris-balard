@@ -104,3 +104,29 @@ collections:
         fields:
           - { label: Titre, name: titre, widget: string }
           - { label: Description, name: description, widget: markdown }
+
+  - name: moments
+    label: Moments du club
+    label_singular: Moment
+    folder: _data/moments
+    create: true
+    format: json
+    slug: "{{year}}-{{month}}-{{day}}-{{titre}}"
+    summary: "{{titre}} — {{date}}"
+    identifier_field: titre
+    fields:
+      - { label: Titre, name: titre, widget: string }
+      - { label: Date, name: date, widget: string, hint: "Ex: Juin 2026" }
+      - { label: Description, name: description, widget: markdown }
+      - label: Catégorie
+        name: categorie
+        widget: select
+        options:
+          - Vie interne
+          - Interclubs
+          - Convivialité
+          - Passation
+          - Conférence
+          - Gala
+      - { label: Photo URL, name: photo, widget: string, required: false, hint: "URL d'une photo (optionnel)" }
+      - { label: Visible sur le site, name: actif, widget: boolean, default: true }
