@@ -157,7 +157,7 @@ jobs:
                 </div>''')
               if moment_cards:
                   new_moments = '<div id="moments-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:2px;background:rgba(201,168,76,0.08);">' + ''.join(moment_cards) + '</div>'
-                  html = re.sub(r'<div id="moments-grid".*?</div>\s*<div class="vie-grid">', new_moments + '\n      <div class="vie-grid">', html, flags=re.DOTALL)
+                  html = re.sub('<div id="moments-grid">.*?<div class="vie-grid">', new_moments + '\n      <div class="vie-grid">', html, flags=re.DOTALL)
           except Exception as e:
               print(f'Moments error: {e}')
 
