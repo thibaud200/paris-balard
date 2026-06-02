@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Membres — Rotary Club Paris Balard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --gold: #C9A84C;
+      --gold-light: #E8CC7A;
+      --navy: #0D1B2A;
+      --navy-mid: #162436;
+      --navy-soft: #1E3450;
+      --white: #FDFAF4;
+      --text-muted: #8B9BAB;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Jost', sans-serif; background: var(--navy); color: var(--white); }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; width: 100%; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.1rem 4rem;
+      background: rgba(13,27,42,0.92); backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(201,168,76,0.12);
+    }
+    .nav-logo { display:flex; align-items:center; gap:0.9rem; text-decoration:none; }
+    .nav-logo .wheel {
+      width:34px; height:34px; border:2px solid var(--gold); border-radius:50%;
+      display:flex; align-items:center; justify-content:center; position:relative; flex-shrink:0;
+    }
+    .nav-logo .wheel::before { content:''; width:9px; height:9px; background:var(--gold); border-radius:50%; }
+    .nav-logo span { font-family:'Cormorant Garamond',serif; font-size:1rem; font-weight:600; letter-spacing:0.07em; color:var(--gold-light); }
+    .nav-back { font-size:0.75rem; letter-spacing:0.12em; text-transform:uppercase; color:rgba(253,250,244,0.65); text-decoration:none; transition:color 0.3s; }
+    .nav-back:hover { color:var(--gold-light); }
+
+    /* HERO */
+    .page-hero {
+      padding: 8rem 4rem 4rem;
+      background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%);
+      border-bottom: 1px solid rgba(201,168,76,0.1);
+    }
+    .page-hero .tag { font-size:0.7rem; letter-spacing:0.22em; text-transform:uppercase; color:var(--gold); margin-bottom:1rem; }
+    .page-hero h1 { font-family:'Cormorant Garamond',serif; font-size:clamp(2.5rem,5vw,4rem); font-weight:300; margin-bottom:0.8rem; }
+    .page-hero h1 em { font-style:italic; color:var(--gold-light); }
+    .page-hero p { font-size:0.95rem; font-weight:300; color:rgba(253,250,244,0.6); max-width:500px; line-height:1.7; }
+
+    /* STATS */
+    .stats-bar {
+      display:flex; gap:3rem; padding:2rem 4rem;
+      background:var(--navy-mid); border-bottom:1px solid rgba(201,168,76,0.08);
+      flex-wrap:wrap;
+    }
+    .stat { }
+    .stat .num { font-family:'Cormorant Garamond',serif; font-size:2rem; font-weight:300; color:var(--gold); }
+    .stat .lbl { font-size:0.72rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--text-muted); }
+
+    /* FILTERS */
+    .filters {
+      padding:2rem 4rem;
+      display:flex; gap:0.8rem; flex-wrap:wrap; align-items:center;
+    }
+    .filter-label { font-size:0.72rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--text-muted); margin-right:0.5rem; }
+    .filter-btn {
+      font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase;
+      border:1px solid rgba(201,168,76,0.2); color:rgba(253,250,244,0.6);
+      padding:0.4rem 1rem; cursor:pointer; background:none; transition:all 0.3s;
+    }
+    .filter-btn:hover, .filter-btn.active { border-color:var(--gold); color:var(--gold-light); background:rgba(201,168,76,0.07); }
+
+    /* GRID */
+    .membres-grid {
+      display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+      gap:2px; background:rgba(201,168,76,0.08);
+      padding:0 0 4rem;
+      margin:0 4rem;
+    }
+    .membre-card {
+      background:var(--navy-mid); padding:2rem;
+      transition:background 0.3s; position:relative; overflow:hidden;
+    }
+    .membre-card::before {
+      content:''; position:absolute; top:0; left:0;
+      width:3px; height:0; background:var(--gold);
+      transition:height 0.4s ease;
+    }
+    .membre-card:hover { background:var(--navy-soft); }
+    .membre-card:hover::before { height:100%; }
+    .membre-photo {
+      width:80px; height:80px; border-radius:50%;
+      background:rgba(201,168,76,0.1); border:2px solid rgba(201,168,76,0.2);
+      display:flex; align-items:center; justify-content:center;
+      margin-bottom:1.2rem; overflow:hidden; flex-shrink:0;
+    }
+    .membre-photo img { width:100%; height:100%; object-fit:cover; }
+    .membre-photo .initiales {
+      font-family:'Cormorant Garamond',serif; font-size:1.5rem; font-weight:300;
+      color:var(--gold);
+    }
+    .membre-role {
+      font-size:0.65rem; letter-spacing:0.15em; text-transform:uppercase;
+      color:var(--gold); margin-bottom:0.4rem;
+    }
+    .membre-name {
+      font-family:'Cormorant Garamond',serif; font-size:1.3rem; font-weight:400;
+      color:var(--white); margin-bottom:0.3rem; line-height:1.2;
+    }
+    .membre-metier {
+      font-size:0.82rem; font-weight:300; color:rgba(253,250,244,0.65);
+      line-height:1.5; margin-bottom:0.8rem;
+    }
+    .membre-meta {
+      display:flex; flex-direction:column; gap:0.3rem;
+      padding-top:0.8rem; border-top:1px solid rgba(201,168,76,0.1);
+    }
+    .membre-meta span { font-size:0.75rem; color:var(--text-muted); }
+    .membre-meta strong { color:rgba(253,250,244,0.7); font-weight:400; }
+    .badge {
+      display:inline-block; margin-top:0.6rem;
+      font-size:0.62rem; letter-spacing:0.12em; text-transform:uppercase;
+      color:var(--gold); border:1px solid rgba(201,168,76,0.2); padding:0.2rem 0.6rem;
+    }
+    .badge-honneur { border-color:rgba(232,204,122,0.3); color:var(--gold-light); }
+
+    footer {
+      padding:2rem 4rem; border-top:1px solid rgba(201,168,76,0.08);
+      text-align:center; color:var(--text-muted); font-size:0.8rem;
+    }
+    footer a { color:var(--gold); text-decoration:none; }
+
+    @media (max-width:768px) {
+      nav { padding:1rem 1.5rem; }
+      .page-hero { padding:6rem 1.5rem 3rem; }
+      .stats-bar { padding:1.5rem; gap:2rem; }
+      .filters { padding:1.5rem; }
+      .membres-grid { margin:0 1.5rem; }
+      footer { padding:2rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="/" class="nav-logo">
+      <div class="wheel"></div>
+      <span>Rotary Paris Balard</span>
+    </a>
+    <a href="/" class="nav-back">← Retour au site</a>
+  </nav>
+
+  <div class="page-hero">
+    <p class="tag">Année 2026–2027</p>
+    <h1>Nos <em>membres</em></h1>
+    <p>Un réseau de professionnels engagés, unis par l'idéal de servir et la conviction que les connexions ont du sens.</p>
+  </div>
+
+  <div class="stats-bar">
+    <div class="stat"><div class="num">19</div><div class="lbl">Membres actifs</div></div>
+    <div class="stat"><div class="num">43%</div><div class="lbl">Femmes</div></div>
+    <div class="stat"><div class="num">2023</div><div class="lbl">Fondation du club</div></div>
+    <div class="stat"><div class="num">1660</div><div class="lbl">District</div></div>
+  </div>
+
+  <div class="filters">
+    <span class="filter-label">Filtrer :</span>
+    <button class="filter-btn active" onclick="filter('tous')">Tous</button>
+    <button class="filter-btn" onclick="filter('bureau')">Bureau</button>
+    <button class="filter-btn" onclick="filter('membre')">Membres</button>
+    <button class="filter-btn" onclick="filter('honneur')">Membres d'honneur</button>
+    <button class="filter-btn" onclick="filter('fondateur')">Membres fondateurs</button>
+  </div>
+
+  <div class="membres-grid" id="membres-grid">
+
+    <!-- BUREAU -->
+    <div class="membre-card" data-cat="bureau">
+      <div class="membre-photo"><span class="initiales">AF</span></div>
+      <div class="membre-role">Présidente 2026–2027</div>
+      <div class="membre-name">Amel Farague</div>
+      <div class="membre-metier">Consultante en Immobilier</div>
+      <div class="membre-meta">
+        <span>Membre depuis <strong>2019</strong></span>
+      </div>
+    </div>
+
+    <div class="membre-card" data-cat="bureau fondateur">
+      <div class="membre-photo"><span class="initiales">GP</span></div>
+      <div class="membre-role">Past Présidente · Responsable Fondation 2026–2027</div>
+      <div class="membre-name">Gladiz Palmeira</div>
+      <div class="membre-metier">Cheffe de projets immobiliers</div>
+      <div class="membre-meta">
+        <span>Membre depuis <strong>2023</strong></span>
+      </div>
+    </div>
+
+    <div class="membre-card" data-cat="bureau">
+      <div class="membre-photo"><span class="initiales">GR</span></div>
+      <div class="membre-role">Trésorière 2026–2027</div>
+      <div class="membre-name">Gabrielle Ripeau</div>
+      <div class="membre-metier">Ingénieure en Cybersécurité</div>
+      <div class="membre-meta">
+        <span>Membre depuis <strong>2023</strong></span>
+      </div>
+    </div>
+
+    <div class="membre-card" data-cat="bureau">
+      <div class="membre-photo"><span class="initiales">TR</span></div>
+      <div class="membre-role">Secrétaire 2026–2027</div>
+      <div class="membre-name">Thibault Rattier</div>
+      <div class="membre-metier">Analyste développeur</div>
+      <div class="membre-meta">
+        <span>Membre depuis <strong>2006</strong></span>
+      </div>
+    </div>
+
+    <!-- MEMBRES AVEC RÔLES -->
+    <div class="membre-card" data-cat="bureau">
+      <div class="membre-photo"><span class="initiales">YS</span></div>
+      <div class="membre-role">Responsable Commission Jeunesse · Protocole 2026–2027</div>
+      <div class="membre-name">Yasmine Saada</div>
+      <div class="membre-metier">Juriste en droit des affaires et formatrice en prise de parole</div>
+      <div class="membre-meta">
+        <span>Membre depuis <strong>2023</strong></span>
+      </div>
+    </div>
+
+    <div class="membre-card" data-cat="bureau">
+      <div class="membre-photo"><span class="initiales">AP</span></div>
+      <div class="membre-role">Responsable Commission Action 2026–2027</div>
+      <div class="membre-name">Alix Petitfrère</div>
+      <div class="membre-metier">Concepteur-Designer Industriel</div>
+      <div class="membre-meta">
+        <span>Membre depuis <strong>2024</strong></span>
+      </div>
+    </div>
+
+    <div class="membre-card" data-cat="bureau">
+      <div class="membre-photo"><span class="initiales">AD</span></div>
+      <div class="membre-role">Responsable Commission Internationale 2026–2027</div>
+      <div class="membre-name">Aurora Davoli</div>
+      <div class="membre-metier">Coach en Personal Branding</div>
+      <div class="membre-meta">
+        <span>Membre depuis <strong>2025</strong></span>
+      </div>
+    </div>
+
+    <div class="membre-card" data-cat="bureau">
+      <div class="membre-photo"><span class="initiales">EG</span></div>
+      <div class="membre-role">Responsable Effectif 2026–2027</div>
+      <div class="membre-name">Eduardo Gurgel</div>
+      <div class="membre-metier">PDG de Montrachet Amérique Latine</div>
+      <div class="membre-meta">
+        <span>Membre depuis <strong>2026</strong></span>
+      </div>
+    </div>
+
+    <div class="membre-card" data-cat="bureau">
+      <div class="membre-photo"><span class="initiales">CG</span></div>
+      <div class="membre-role">Responsable Banque Alimentaire 2026–2027</div>
+      <div class="membre-name">Claude Guempik</div>
+      <div class="membre-metier">Retraité du groupe EDF</div>
+      <div class="membre-meta">
+        <span>Membre depuis <strong>2023</strong></span>
+      </div>
+    </div>
+
+    <!-- MEMBRES -->
+    <div class="membre-card" data-cat="membre fondateur">
+      <div class="membre-photo"><span class="initiales">EM</span></div>
+      <div class="membre-role">Membre fondateur</div>
+      <div class="membre-name">Emmanuel Marsal</div>
+      <div class="membre-metier">Formateur en Comptabilité & Gestion</div>
+      <div class="membre-meta">
+        <span>Membre depuis <strong>2001</strong></span>
+      </div>
+    </div>
+
+    <div class="membre-card" data-cat="membre fondateur">
+      <div class="membre-photo"><span class="initiales">BC</span></div>
+      <div class="membre-role">Membre fondateur</div>
+      <div class="membre-name">Barbara Carroll</div>
+      <div class="membre-metier">Directrice d'opérations</div>
+      <div class="membre-meta">
+        <span>Membre depuis <strong>2023</strong></span>
+      </div>
+    </div>
+
+    <div class="membre-card" data-cat="membre">
+      <div class="membre-photo"><span class="initiales">GM</span></div>
+      <div class="membre-role">Membre</div>
+      <div class="membre-name">Gwendoline Massain</div>
+      <div class="membre-metier">Avocate en droit de la famille</div>
+      <div class="membre-meta">
+        <span>Membre depuis <strong>2025</strong></span>
+      </div>
+    </div>
+
+    <div class="membre-card" data-cat="membre">
+      <div class="membre-photo"><span class="initiales">OD</span></div>
+      <div class="membre-role">Membre</div>
+      <div class="membre-name">Omar Dawson</div>
+      <div class="membre-metier">Directeur de projets</div>
+      <div class="membre-meta">
+        <span>Membre depuis <strong>2024</strong></span>
+      </div>
+    </div>
+
+    <div class="membre-card" data-cat="membre fondateur">
+      <div class="membre-photo"><span class="initiales">SF</span></div>
+      <div class="membre-role">Membre fondateur</div>
+      <div class="membre-name">Sébastien Foy</div>
+      <div class="membre-metier">Président LEONARD CONSEIL</div>
+      <div class="membre-meta">
+        <span>Membre depuis <strong>2023</strong></span>
+      </div>
+    </div>
+
+    <div class="membre-card" data-cat="membre">
+      <div class="membre-photo"><span class="initiales">KA</span></div>
+      <div class="membre-role">Membre</div>
+      <div class="membre-name">Kamal Akridiss</div>
+      <div class="membre-metier">Fondateur R.O.C.K. Institute</div>
+      <div class="membre-meta">
+        <span>Membre depuis <strong>2025</strong></span>
+      </div>
+    </div>
+
+    <div class="membre-card" data-cat="membre fondateur">
+      <div class="membre-photo"><span class="initiales">LB</span></div>
+      <div class="membre-role">Membre fondateur</div>
+      <div class="membre-name">Léopold Bathem</div>
+      <div class="membre-metier">Avocat</div>
+      <div class="membre-meta">
+        <span>Membre depuis <strong>2006</strong></span>
+      </div>
+    </div>
+
+    <div class="membre-card" data-cat="membre">
+      <div class="membre-photo"><span class="initiales">AJ</span></div>
+      <div class="membre-role">Membre</div>
+      <div class="membre-name">Alain Jacquot</div>
+      <div class="membre-metier"></div>
+      <div class="membre-meta">
+        <span>Membre depuis <strong>2024</strong></span>
+      </div>
+    </div>
+
+    <div class="membre-card" data-cat="membre">
+      <div class="membre-photo"><span class="initiales">HA</span></div>
+      <div class="membre-role">Membre · Responsable Fondation 2025–2026</div>
+      <div class="membre-name">Hervé Azoulay</div>
+      <div class="membre-metier">Membre du Directoire AA&W</div>
+      <div class="membre-meta">
+        <span>Membre depuis <strong>2023</strong></span>
+      </div>
+    </div>
+
+    <div class="membre-card" data-cat="membre">
+      <div class="membre-photo"><span class="initiales">CL</span></div>
+      <div class="membre-role">Membre</div>
+      <div class="membre-name">Christian La Marre</div>
+      <div class="membre-metier">Consultant en performance auprès de CEO et gouvernements · Professeur</div>
+      <div class="membre-meta">
+        <span>Membre depuis <strong>2024</strong></span>
+      </div>
+    </div>
+
+    <!-- MEMBRES D'HONNEUR -->
+    <div class="membre-card" data-cat="honneur fondateur">
+      <div class="membre-photo"><span class="initiales">AA</span></div>
+      <div class="membre-role">Membre d'honneur · Fondateur du club</div>
+      <div class="membre-name">André Added</div>
+      <div class="membre-metier">Conseil en Intelligence Economique</div>
+      <div class="membre-meta">
+        <span>Membre depuis <strong>1991</strong></span>
+      </div>
+      <span class="badge badge-honneur">Fondateur 2023</span>
+    </div>
+
+    <div class="membre-card" data-cat="honneur">
+      <div class="membre-photo"><span class="initiales">IM</span></div>
+      <div class="membre-role">Membre d'honneur · Président 2024–2025</div>
+      <div class="membre-name">Ismaël M'Baye</div>
+      <div class="membre-metier">Juriste en droit public</div>
+      <div class="membre-meta">
+        <span>Membre depuis <strong>2019</strong></span>
+      </div>
+      <span class="badge badge-honneur">Past Président</span>
+    </div>
+
+  </div>
+
+  <footer>
+    <p>© 2026 <a href="/">Rotary Club Paris Balard</a> · District 1660 · <a href="mailto:contact@rotaryparisbalard.fr">contact@rotaryparisbalard.fr</a></p>
+  </footer>
+
+  <script>
+    function filter(cat) {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      event.target.classList.add('active');
+      document.querySelectorAll('.membre-card').forEach(card => {
+        if (cat === 'tous' || card.dataset.cat.includes(cat)) {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+  </script>
+</body>
+</html>
