@@ -5,6 +5,10 @@ on:
     paths:
       - '_data/**'
 
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
 jobs:
   inject:
     runs-on: ubuntu-latest
